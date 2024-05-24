@@ -4,8 +4,10 @@ import mongoose from "mongoose";
 import UserController from "./routes/user";
 import themeController from "./routes/theme";
 import diaryController from "./routes/diary";
+import { cors } from "hono/cors";
 
 const app = new Hono();
+app.use("/*", cors());
 app.route("/user", UserController);
 app.route("/theme", themeController);
 app.route("/diary", diaryController);
