@@ -1,35 +1,39 @@
-import { Request, Response, NextFunction } from "express";
+require("dotenv").config();
+import { verify } from "hono/jwt";
+import { Context, Next } from "hono";
+import User from "../model/user";
 
-const secretKey = "your_secret_key"; // Replace with your secret key
-
-interface CustomRequest extends Request {
-  user?: string | JwtPayload;
+// Extend the Hono request type to include the `user` property
+declare module "hono" {
+  interface HonoRequest {
+    user?: any;
+  }
 }
 
-// Function to generate a JWT
-export function generateToken(payload: object): string {
-  return jwt.sign(payload, secretKey, { expiresIn: "1h" });
-}
-
-// Middleware to verify a JWT
-export function verifyToken(
-  req: CustomRequest,
-  res: Response,
-  next: NextFunction
-): void {
-  const token = req.headers["authorization"];
+const authenticator = async (c: Context, next: Next) => {
+  const token = c.req.header("authorization");
+  const secret = "mySecretKey";
 
   if (!token) {
-    res.status(403).send({ message: "No token provided!" });
-    return;
+    return c.json({ message: "No token provided" }, 401);
   }
 
-  jwt.verify(token, secretKey, (err, decoded) => {
-    if (err) {
-      res.status(500).send({ message: "Failed to authenticate token." });
-      return;
+  try {
+    const decodedPayload = await verify(token, secret);
+    const userId = decodedPayload.userId;
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return c.json({ error: "User not found" }, 401);
     }
-    req.user = decoded;
-    next();
-  });
-}
+
+    c.req.user = user; // Attach user to request
+    await next();
+  } catch (err) {
+    console.error(err);
+    return c.json({ message: "Invalid token" }, 401);
+  }
+};
+
+export default authenticator;

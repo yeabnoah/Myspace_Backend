@@ -25,7 +25,7 @@ const UserSchema = new mongoose.Schema({
 
   theme: {
     type: String,
-    default: "black",
+    default: "primary",
   },
 });
 

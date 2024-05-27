@@ -17,12 +17,23 @@ const diarySchema = new mongoose.Schema({
   theme: {
     type: String,
   },
-  IsPublic: {
+  isPublic: {
     type: Boolean,
+    required: true,
+    default: false,
   },
-  Date: {
+  date: {
     type: String,
   },
+
+  status: {
+    type: Boolean,
+    default: true,
+  },
+  reports: [{ type: Schema.Types.ObjectId, ref: "Report" }],
+  likes: [{ type: Schema.Types.ObjectId, ref: "Like" }],
+  dislikes: [{ type: Schema.Types.ObjectId, ref: "Dislike" }],
+  comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
 });
 
 const Diary = mongoose.model("Diary", diarySchema);

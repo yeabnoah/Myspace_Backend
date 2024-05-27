@@ -6,23 +6,16 @@ import themeController from "./routes/theme";
 import diaryController from "./routes/diary";
 import { cors } from "hono/cors";
 import { jwt } from "hono/jwt";
-import actions from "./routes/login";
+import actionController from "./routes/actions";
 
 const app = new Hono();
 app.use("/*", cors());
 
-app.use(
-  "/auth/*",
-  jwt({
-    secret: "it-is-very-secret",
-  })
-);
-
 app.route("/user", UserController);
 app.route("/theme", themeController);
 app.route("/diary", diaryController);
-app.route("/", actions);
-// this is gonna work ... i believe it will
+app.route("/", actionController);
+
 mongoose
   .connect("mongodb://127.0.0.1/Diary")
   .then(() => {

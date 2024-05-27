@@ -1,0 +1,5 @@
+#ideas 
+
+
+- user can see posts with out logging in 
+- user can see secrets with out logging in 
