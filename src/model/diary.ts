@@ -14,6 +14,15 @@ const diarySchema = new mongoose.Schema({
   mood: {
     type: String,
   },
+  theme: {
+    type: String,
+  },
+  IsPublic: {
+    type: Boolean,
+  },
+  Date: {
+    type: String,
+  },
 });
 
 const Diary = mongoose.model("Diary", diarySchema);
