@@ -3,6 +3,7 @@ import { Context } from "hono";
 import generateToken from "../middleware/generateToken";
 import bcrypt from "bcrypt";
 import User from "../model/user";
+import Diary from "../model/diary";
 
 const actionController = new Hono();
 
@@ -63,6 +64,19 @@ actionController.post("/register", async (c: Context) => {
       { message: `An error occurred: ${(error as Error).message}` },
       500
     );
+  }
+});
+
+actionController.get("/", async (c) => {
+  try {
+    const diaries = await Diary.find({
+      $and: [{ isPublic: true }, { status: true }],
+    });
+
+    return c.json(diaries);
+  } catch (err) {
+    console.error(err);
+    return c.json({ err: "Internal server error" });
   }
 });
 
