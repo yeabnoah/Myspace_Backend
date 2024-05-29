@@ -63,8 +63,23 @@ diaryController.get("/:id", async (c) => {
     const user = await c.req.user;
 
     const myDiaries = await Diary.find({
-      userId: id,
+      _id: id,
       $or: [{ isPublic: true }, { userId: user._id }, { status: true }],
+    });
+
+    return c.json(myDiaries);
+  } catch (err) {
+    console.error(err);
+    return c.json({ err: "Internal server error" });
+  }
+});
+
+diaryController.get("/my_diary/", async (c) => {
+  try {
+    const user = await c.req.user;
+
+    const myDiaries = await Diary.find({
+      userId: user._id,
     });
 
     return c.json(myDiaries);

@@ -69,4 +69,33 @@ UserController.get("/whoami/", async (c: Context) => {
   }
 });
 
+UserController.patch("/update-profile", async (c: Context) => {
+  try {
+    const user = c.req.user;
+
+    if (!user) {
+      return c.json({ message: "User not authenticated" }, 401);
+    }
+
+    const updateData = await c.req.json();
+
+    const updatedUser = await User.findByIdAndUpdate(
+      user._id,
+      { $set: updateData },
+      { new: true }
+    ).select("-password");
+
+    if (!updatedUser) {
+      return c.json({ message: "User not found" }, 404);
+    }
+
+    return c.json(updatedUser);
+  } catch (error) {
+    return c.json(
+      { message: `An error occurred: ${(error as Error).message}` },
+      500
+    );
+  }
+});
+
 export default UserController;

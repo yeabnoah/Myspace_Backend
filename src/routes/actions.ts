@@ -80,4 +80,20 @@ actionController.get("/", async (c) => {
   }
 });
 
+actionController.get("/free/:id", async (c) => {
+  try {
+    const id = c.req.param("id");
+
+    const myDiaries = await Diary.findOne({
+      _id: id,
+      $or: [{ isPublic: true }, { status: true }],
+    });
+
+    return c.json(myDiaries);
+  } catch (err) {
+    console.error(err);
+    return c.json({ err: "Internal server error" });
+  }
+});
+
 export default actionController;
