@@ -48,19 +48,19 @@ UserController.get("/:id", async (c: Context) => {
   }
 });
 
-UserController.post("/whoami", async (c: Context) => {
+UserController.get("/whoami/", async (c: Context) => {
   try {
     const user = await c.req.user;
 
-    const userInfo = {
-      id: user._id,
-      username: user.username,
-      email: user.name,
-      profilePicture: user.profilePicture,
-      diaries: user.diaries,
-    };
+    if (!user) {
+      return c.json({ message: "User not found" }, 404);
+    }
 
-    return c.json(userInfo);
+    const myDetails = await User.findOne({
+      _id: user.id,
+    });
+
+    return c.json(myDetails);
   } catch (error) {
     return c.json(
       { message: `An error occurred: ${(error as Error).message}` },
