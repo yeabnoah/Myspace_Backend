@@ -8,6 +8,7 @@ const UserSchema = new mongoose.Schema({
 
   profilePicture: {
     type: String,
+    default: "https://i.ibb.co/nCNGk7F/placeholder.png",
   },
 
   username: {

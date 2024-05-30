@@ -49,8 +49,6 @@ actionController.post("/register", async (c: Context) => {
       name: name,
       username: username,
       password: hashedPassword,
-      profilePicture:
-        "https://d22e6o9mp4t2lx.cloudfront.net/cms/pfp3_d7855f9562.webp",
     });
 
     await newUser.save();
