@@ -174,7 +174,13 @@ diaryController.get("/comments/:diaryId", async (c) => {
       $or: [{ isPublic: true }, { userId: user._id }, { status: true }],
     };
 
-    const diary = await Diary.findOne(diaryQuery).populate("comments");
+    const diary = await Diary.findOne(diaryQuery).populate({
+      path: "comments",
+      populate: {
+        path: "userId",
+        model: "User",
+      },
+    });
 
     if (!diary) {
       return c.json({ err: "Diary not found or you don't have access" });

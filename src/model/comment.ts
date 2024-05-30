@@ -9,6 +9,7 @@ const commentSchema = new mongoose.Schema({
     type: mongoose.Schema.ObjectId,
     ref: "User",
   },
+  userImage: String,
   diaryId: {
     type: mongoose.Schema.ObjectId,
     ref: "Diary",
