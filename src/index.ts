@@ -17,7 +17,7 @@ app.route("/diary", diaryController);
 app.route("/", actionController);
 
 mongoose
-  .connect("mongodb://127.0.0.1/Diary")
+  .connect(process.env.MONGO_DB_URL)
   .then(() => {
     console.log("Connected to MongoDB");
   })
@@ -25,7 +25,7 @@ mongoose
     console.error("Failed to connect to MongoDB", err);
   });
 
-const port = 3000;
+const port = process.env.PORT;
 serve({
   fetch: app.fetch,
   port,
